@@ -156,6 +156,11 @@ public static class PacketExtensions
 {
     public static object GetTrueTypeOfT(this (char, byte[]) data)
     {
+        if (data.Item2.Length == 0)
+        {
+            Debug.LogError("No Data!");
+        }
+
         object CastedType;
 
         switch (data.Item1)
