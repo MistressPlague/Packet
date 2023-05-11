@@ -6,7 +6,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using Debug = UnityEngine.Debug;
 
-public class Packet : IDisposable
+public class Packet //: IDisposable
 {
     public enum PacketType
     {
@@ -42,7 +42,17 @@ public class Packet : IDisposable
         Type = (PacketType)Convert.ToInt32(Buffer[0].Item2[0]);
         Indexes['i'] = (Indexes.ContainsKey('i') ? Indexes['i'] : 0) + 1;
 
-        //Debug.Log($"{JsonConvert.SerializeObject(Buffer)}");
+        foreach (var entry in Buffer)
+        {
+            var s = "";
+
+            foreach (var entry2 in entry.Item2)
+            {
+                s += entry2;
+            }
+
+            Debug.Log($"{entry.Item1.ToString()} - {s}");
+        }
     }
 
     /// <summary>
@@ -100,9 +110,10 @@ public class Packet : IDisposable
 
         var DidFind = false;
 
-        if (IndexToRead >= Buffer.Count - 1)
+        if (IndexToRead > Buffer.Count - 1)
         {
             Debug.Log("IndexToRead Was Too Large. Expect No More Values Error After This.");
+            Debug.Log($"{Environment.StackTrace}");
             return IndexToRead;
         }
 
@@ -127,29 +138,29 @@ public class Packet : IDisposable
     }
 
     // Yeet
-    private bool disposed;
+    //private bool disposed;
 
-    protected virtual void Dispose(bool _disposing)
-    {
-        if (!disposed)
-        {
-            if (_disposing)
-            {
-                Buffer.Clear();
-                Buffer = null;
-                Indexes.Clear();
-                Indexes = null;
-            }
+    //protected virtual void Dispose(bool _disposing)
+    //{
+    //    if (!disposed)
+    //    {
+    //        if (_disposing)
+    //        {
+    //            Buffer.Clear();
+    //            Buffer = null;
+    //            Indexes.Clear();
+    //            Indexes = null;
+    //        }
 
-            disposed = true;
-        }
-    }
+    //        disposed = true;
+    //    }
+    //}
 
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
+    //public void Dispose()
+    //{
+    //    Dispose(true);
+    //    GC.SuppressFinalize(this);
+    //}
 }
 
 public static class PacketExtensions
